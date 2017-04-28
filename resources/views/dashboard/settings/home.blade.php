@@ -5,13 +5,13 @@
             <i class="ti-home"></i>
         </div>
         <div class="header-title">
-            <h1>Settings</h1>
+            <h1>{{trans('messages.dashboardtitle')}}</h1>
             <small>Manage Admins.</small>
             @include('dashboard.partials.quick-links')
             <ol class="breadcrumb">
                 <li><a href="{{ url('/') }}"><i class="pe-7s-home"></i> Home</a></li>
                 <li><a href="{{ url('/dashboard') }}"> Dashboard</a></li>
-                <li class="active">Home Settings</li>
+                <li class="active">Settings</li>
             </ol>
         </div>
     </section>
@@ -22,25 +22,29 @@
             <div class="panel panel-bd ">
                 <div class="panel-heading ">
                     <div  class="panel-title col-sm-10">
-                        <h4>Home Page Settings</h4>
+                        <h4>General Settings</h4>
                     </div>
                     <div class="clearfix"></div>
                 </div>
                 <div class="panel-body">
 
-                    {!! Form::open(['action'=>['Dashboard\SettingsController@update','slug'=>'home_page'],'method'=>'patch','class'=>'form-horizontal','enctype'=>'multipart/form-data']) !!}
+                    {!! Form::open(['action'=>['Dashboard\SettingController@update','slug'=>'general'],'method'=>'patch','class'=>'form-horizontal','enctype'=>'multipart/form-data']) !!}
                     <div class="row">
                         <div class="col-sm-8 col-sm-offset-2">
-                            <h3 class="text-center">Home Page Settings</h3>
+                            <h3 class="text-center">General Settings</h3>
                             <hr>
-                            @foreach($Settings('home_page') as $key=>$setting)
+                            <?php $settings = $_setting('general');
+
+                            ?>
+                            @if(count($settings)>0)
+                            @foreach($settings as $key=>$setting)
                                 <div class="form-group {{ $errors->has($key) ? ' has-error' : '' }}">
                                     {!! Form::label($key, $setting->title, ['class' => 'col-sm-2 control-label'])  !!}
                                     <div class="col-sm-9">
                                         @if($key=='slider_background')
                                             <input type="file" class="input-slider-background" name="slider_background">
-                                        @elseif($key=='meta_description' || $key=='slider_message')
-                                            {!! Form::textarea($key,$value= $setting->value, $attributes = ['class'=>'form-control','placeholder'=>$setting->title])  !!}
+                                        @elseif($key=='language' )
+                                            {!! Form::select('language', ['es' => 'English', 'he' => 'Hebrew'], $setting->value)  !!}
                                         @else
                                             {!! Form::text($key,$value= $setting->value, $attributes = ['class'=>'form-control','placeholder'=>$setting->title])  !!}
                                         @endif
@@ -61,6 +65,7 @@
                                     </div>
                                 </div>
                             @endforeach
+                                @endif
                         </div>
                     </div>
                     <hr>
